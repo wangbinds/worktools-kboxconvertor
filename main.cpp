@@ -1,4 +1,6 @@
 #include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 
 #include "keybox.h"
@@ -6,8 +8,10 @@
 #define KEYBOX_FILE_NAME "KeyBox.txt"
 #define DEST_FILE_NAME_FORMAT "keybox_csv_%d.csv"
 #define BUFFER_LENGTH 512
-#define NUMBER_OF_KEYBOXES 300000
-#define NUMBER_OF_EACH_FILE 50000
+//#define NUMBER_OF_KEYBOXES 300000
+//#define NUMBER_OF_EACH_FILE 50000
+#define NUMBER_OF_KEYBOXES 45
+#define NUMBER_OF_EACH_FILE 9
 
 using namespace std;
 
@@ -67,6 +71,7 @@ finally:
     //close all opened files
     fclose(src);
     fclose(dest);
+    cout<<"Keyboxconvertor convert all keybox successfully"<<endl;
     
     //system("PAUSE");
     return EXIT_SUCCESS;
