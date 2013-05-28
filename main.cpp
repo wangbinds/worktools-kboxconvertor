@@ -19,15 +19,33 @@ int main(int argc, char *argv[])
 {
     char buffer[BUFFER_LENGTH];
     char destFileName[20];
+    char *srcFileName = KEYBOX_FILE_NAME;
     FILE* src = NULL;
     FILE* dest = NULL;
     Keybox keybox;
     cout<<"KeyboxConvertor opened"<<endl<<endl;
+
+    //check command line parameters
+    if(argc > 2)
+    {
+        cout<<"wrong command line parameters"<<endl;
+        cout<<"Usage: KeyboxConvertor [sourceFile]"<<endl;
+        cout<<"to convert android keybox"<<endl;
+        cout<<"If you do not provide the source file,\nthe default is KeyBox.txt in the Current directory"<<endl;
+        return 1;
+    }
+    //if there are tow command line parameters
+    //the second is the input file path
+    if(argc == 2)
+    {
+        srcFileName = argv[1];
+        cout<<"the input file path is : "<<srcFileName<<endl;
+    }
     
-    if((src = fopen(KEYBOX_FILE_NAME, "r")) == NULL)
+    if((src = fopen(srcFileName, "r")) == NULL)
     {
            cout<<"KeyboxConvertor open source file FAILED"<<endl;
-           return 1;
+           goto finally;
     }
     for(int i=0; i<NUMBER_OF_KEYBOXES; i++)
     {
@@ -44,7 +62,7 @@ int main(int argc, char *argv[])
             if((dest = fopen(destFileName, "wb")) == NULL)
             {
                 cout<<"KeyboxConvertor open destination file FAILED"<<endl;
-                return 1;
+                goto finally;
             }
         }
         
@@ -53,7 +71,7 @@ int main(int argc, char *argv[])
         if(fgets(buffer, BUFFER_LENGTH, src) == NULL)
         {
             cout<<"KeyboxConvertor read file FAILED"<<endl;
-            return 1;
+            goto finally;
         }
         //cout<<"KeyboxConvertor handle keybox : "<<buffer<<endl;
         keybox.init(buffer);
@@ -66,12 +84,12 @@ int main(int argc, char *argv[])
         //write the formated keybox to destination file
         fwrite(buffer, 1, length, dest);
     }
+    cout<<"Keyboxconvertor convert all keybox successfully"<<endl;
     
 finally:
-    //close all opened files
-    fclose(src);
-    fclose(dest);
-    cout<<"Keyboxconvertor convert all keybox successfully"<<endl;
+    //Finally : close all opened files
+    if(src != NULL) fclose(src);
+    if(dest != NULL) fclose(dest);
     
     //system("PAUSE");
     return EXIT_SUCCESS;
